@@ -12,7 +12,7 @@ LOGGER = logging.getLogger(__name__)
 @pytest.mark.parametrize(
     "test_file",
     # TODO: add local_sparklyr
-    ["local_pyspark", "local_spylon", "local_toree", "local_sparkR"],
+    ["local_pyspark", "local_spylon", "local_sparkR"],
 )
 def test_nbconvert(container, test_file):
     """Check if Spark notebooks can be executed"""
@@ -21,7 +21,10 @@ def test_nbconvert(container, test_file):
     output_dir = "/tmp"
     timeout_ms = 600
     LOGGER.info(f"Test that {test_file} notebook can be executed ...")
-    command = f"jupyter nbconvert --to markdown --ExecutePreprocessor.timeout={timeout_ms} --output-dir {output_dir} --execute {cont_data_dir}/{test_file}.ipynb"
+    command = "jupyter nbconvert --to markdown " + \
+        f"--ExecutePreprocessor.timeout={timeout_ms} " + \
+        f"--output-dir {output_dir} " + \
+        f"--execute {cont_data_dir}/{test_file}.ipynb"
     c = container.run(
         volumes={host_data_dir: {"bind": cont_data_dir, "mode": "ro"}},
         tty=True,
